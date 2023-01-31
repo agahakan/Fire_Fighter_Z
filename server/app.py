@@ -22,7 +22,7 @@ player_ref = db.collection('player')
 
 
 
-@app.route('/adduser', methods=['GET'])
+@app.route('/adduser', methods=['POST'])
 @cross_origin()
 def addUser():
 
@@ -35,7 +35,11 @@ def addUser():
         
         list_cards = [doc.to_dict() for doc in db.collection(username).stream()]
         
-        return jsonify(list_cards), 200
+        dic_rc = {}
+        dic_rc["status"] = "ok"
+        dic_rc["rc"] = list_cards
+
+        return jsonify(dic_rc), 200
     except Exception as e:
         return f"An Error Occurred: {e}"
 
