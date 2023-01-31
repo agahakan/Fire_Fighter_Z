@@ -45,10 +45,6 @@ function manage_mana(Cost){
     return 0;
 }
 
-// gestion of player turn
-function playerturn(activeCard) {
-    animation.animateSprite('firefighter', 1750)
-
 // gestion attaque buff
 function manage_buff(activeCard) {
     console.log("Buff is :", buff);
@@ -101,6 +97,7 @@ function manage_LifeTheft(damage) {
 
 // gestion of player turn
 function playerturn(activeCard) {
+    animation.animateSprite('firefighter', 1750);
     let nbr = 0;
 
     console.log(activeCard);
