@@ -5,7 +5,7 @@ const registerForm = document.getElementById("register-form");
 const registerButton = document.getElementById("register-form-submit");
 const registerErrorMsg = document.getElementById("register-error-msg");
 const registerSuccessMsg = document.getElementById("register-success-msg");
-if (sessionStorage.getItem("username")) window.location.href = "./index.html";
+if (localStorage.getItem("username")) window.location.href = "./index.html";
 // Service REST /login parameter username, password 
 async function login() {
     const username = loginForm.username.value;
@@ -20,7 +20,7 @@ async function login() {
     let data = await response.json();
     console.log("data", data);
     if (data["status"] == "ok") {
-        sessionStorage.setItem("username", data["username"]);
+        localStorage.setItem("username", data["username"]);
         window.location.href = "./index.html";
     } else // Otherwise, make the login error message show (change its oppacity)
     loginErrorMsg.style.opacity = 1;
