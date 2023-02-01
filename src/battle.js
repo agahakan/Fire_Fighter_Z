@@ -8,7 +8,7 @@ let defence_p = 0;
 let turndef_p = 0;
 let defence_m = 0;
 let turndef_m = 0;
-let buff = false;
+let buff = true;
 let turn_buff = 0;
 
 
@@ -36,7 +36,7 @@ function manage_mana(Cost){
         if (turndef_m <= 0) {
             defence_m = 0;
         }
-        mana_points.textContent = 3;
+        mana_points.textContent = 4;
         iturn += 1;
         return 1;
     }
@@ -101,10 +101,10 @@ function manage_LifeTheft(damage) {
 
 // gestion of player turn
 export function playerturn(activeCard) {
-    // console.log("tour avant la baisse de défense du joueur: %i", turndef_p);
-    // console.log("tour avant la baisse de défense du zombie: %i", turndef_m);
-    // console.log("tour de jeu: %i", iturn);
-    // console.log("Tour du joueur");
+    console.log("tour avant la baisse de défense du joueur: %i", turndef_p);
+    console.log("tour avant la baisse de défense du zombie: %i", turndef_m);
+    console.log("tour de jeu: %i", iturn);
+    console.log("Tour du joueur");
     let nbr = 0;
     
     animation.animateSprite('firefighter', 1750);
