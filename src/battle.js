@@ -8,7 +8,6 @@ let defence_p = 0;
 let turndef_p = 0;
 let defence_m = 0;
 let turndef_m = 0;
-let buff = true;
 let turn_buff = 0;
 
 
@@ -46,19 +45,21 @@ function manage_mana(Cost){
 }
 
 // gestion attaque buff
-function manage_buff(activeCard) {
-    console.log("Buff is :", buff);
-    if (activeCard.Buff === true || buff === true) {
+function manage_buff(buff) {
+    console.log("Start buff :", buff);
+    console.log("turn buff :", turn_buff);
+    if (buff === true || turn_buff > 0) {
         buff = true;
-        turn_buff += 1;
-        if (turn_buff === 1) {
-            buff = true;
-        } else if (turn_buff === 3) {
-         buff = false;
-         turn_buff = 0;
+        console.log("Buff mid :", buff);
+        if (turn_buff === 3) {
+            console.log("Buff end :", buff);
+            buff = false;
+            turn_buff = 0;
         }
+        turn_buff += 1;
     }
-    return;
+    console.log("Buff is :", buff);
+    return buff;
 }
 
 //gestion heal
@@ -111,9 +112,9 @@ export function playerturn(activeCard) {
     console.log(activeCard);
     if (manage_mana(activeCard.Cost) == 1)
         return;
-    manage_buff(activeCard);
-
-    nbr = allgo(activeCard.Attack, defence_m, activeCard.Heal, buff, false, activeCard.CC, activeCard.Miss, activeCard.Multi);
+    activeCard.Buff = manage_buff(activeCard.Buff);
+    console.log("card buff : ", activeCard.Buff);
+    nbr = allgo(activeCard.Attack, defence_m, activeCard.Heal, activeCard.Buff, activeCard.CC, activeCard.Miss, activeCard.Multi);
     
     manage_defence(activeCard);
     manage_heal(activeCard, nbr);
