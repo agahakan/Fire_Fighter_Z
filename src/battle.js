@@ -70,8 +70,8 @@ function manage_heal(activeCard, heal) {
         hp_p = Math.floor((-hp_p - heal))*-1;
         hp_player.textContent = hp_p;
         action.innerHTML = `You : uses a skill and heals ${Math.floor(heal)} hp`
-      if (hp_p >= 180)
-        hp_player.textContent = 180;
+      if (hp_p >= 160)
+        hp_player.textContent = 160;
     }
     return;
 }
@@ -176,8 +176,8 @@ function monsterheal(alea) {
         hp_monster.textContent = hp_m;
 
         action.innerHTML = `Zombie :  uses a basic healing skill and recovers ${Math.floor(heal)} hp`
-        if (hp_m >= 100) {
-            hp_monster.textContent = 100;
+        if (hp_m >= 115) {
+            hp_monster.textContent = 115;
         }
     //strong heal
     if (alea >= 9 && alea <= 10){
@@ -186,8 +186,8 @@ function monsterheal(alea) {
         hp_monster.textContent = hp_m;
         action.innerHTML = `Zombie :  uses a strong healing skill and recovers ${Math.floor(heal)} hp`
 
-        if (hp_m >= 100) {
-            hp_monster.textContent = 100;
+        if (hp_m >= 115) {
+            hp_monster.textContent = 115;
             }
         }
     }
