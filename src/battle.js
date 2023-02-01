@@ -96,14 +96,14 @@ function manage_LifeTheft(damage) {
     hp_monster.textContent -= damage;
     check_death();
     console.log("LifeTheft: dammage : %i, regen : %1", damage, regen);
-    action.innerHTML = `Pompier :  uses steal life attack and inflicts ${Math.floor(damage)} damage and recover ${Math.floor(regen)} hp`
+    action.innerHTML = `You :  uses steal life attack and inflicts ${Math.floor(damage)} damage and recover ${Math.floor(regen)} hp`
     return;
 }
 
 // gestion of player turn
 export function playerturn(activeCard) {
-    document.querySelector('.turn-def-firefighter').innerHTML = `tour avant baisse de défense : ${turndef_p}`;
-    document.querySelector('.turn-def-zombie').innerHTML = `tour avant baisse de défense : ${turndef_m}`;
+    document.querySelector('.turn-def-firefighter').innerHTML = `turn before defense drop : ${turndef_p}`;
+    document.querySelector('.turn-def-zombie').innerHTML = `turn before defense drop : ${turndef_m}`;
 
     console.log("tour de jeu: %i", iturn);
     console.log("Tour du joueur");
