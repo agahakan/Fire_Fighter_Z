@@ -1,5 +1,6 @@
 import { API_URL } from "./game";
-import turngestion from "./battle";
+import { playerturn } from "./battle";
+import { zombieturn } from "./battle";
 
 export default class Card {
   constructor() {
@@ -15,7 +16,7 @@ export default class Card {
         const card_id = card.getAttribute("card_id");
         const activeCard = data[tab_id];
         data.splice(tab_id, 1);
-        turngestion(activeCard);
+        playerturn(activeCard)
         card.classList.add("selected");
         setTimeout(() => {
           card.parentNode.removeChild(card);
@@ -26,7 +27,7 @@ export default class Card {
   }
 
   async fetchCards() {
-    let username = localStorage.getItem("username");
+    let username = sessionStorage.getItem("username");
     let response = await fetch(`${API_URL}/init?username=`+username, {
       method: "GET",
       headers: {
@@ -36,8 +37,8 @@ export default class Card {
     this.showLoading();
 
     let data = await response.json();
-    localStorage.setItem("listCards", JSON.stringify(data));
-    const listCards = localStorage.getItem("listCards");
+    sessionStorage.setItem("listCards", JSON.stringify(data));
+    const listCards = sessionStorage.getItem("listCards");
     this.json_obj = JSON.parse(listCards);
     return this.json_obj;
   }
@@ -45,7 +46,7 @@ export default class Card {
   createCards(data) {
     const cardsContainer = document.querySelector(".cards");
     cardsContainer.innerHTML = "";
-
+    
     for (let i = 0; i < data.length; i++) {
       const cardsData = data[i];
       const cardElement = document.createElement("div");
@@ -69,7 +70,8 @@ export default class Card {
   }
 
   async playDrawcard(id) {
-    let username = localStorage.getItem("username");
+    zombieturn();
+    let username = sessionStorage.getItem("username");
     let response = await fetch(`${API_URL}/play_drawcard?id=`+id+'&username='+username, {
       method: "GET",
       headers: {
@@ -77,8 +79,8 @@ export default class Card {
       },
     });
     let data = await response.json();
-    localStorage.setItem("listPlayerCards", JSON.stringify(data));
-    const listCards = localStorage.getItem("listPlayerCards");
+    sessionStorage.setItem("listPlayerCards", JSON.stringify(data));
+    const listCards = sessionStorage.getItem("listPlayerCards");
     this.json_obj = JSON.parse(listCards);
     this.createCards(this.json_obj);
   }

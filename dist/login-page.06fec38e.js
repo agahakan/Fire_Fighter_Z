@@ -19,7 +19,7 @@ async function login() {
     let data = await response.json();
     console.log("data", data);
     if (data["status"] == "ok") {
-        localStorage.setItem("username", data["username"]);
+        sessionStorage.setItem("username", data["username"]);
         window.location.href = "./index.html";
     } else // Otherwise, make the login error message show (change its oppacity)
     loginErrorMsg.style.opacity = 1;
@@ -27,6 +27,11 @@ async function login() {
 async function register() {
     const username = registerForm.username.value;
     const password = registerForm.password.value;
+    if (!username || !password) {
+        registerErrorMsg.textContent = "Please enter a username and password";
+        registerErrorMsg.style.opacity = 1;
+        return;
+    }
     let response = await fetch("http://localhost:8080/adduser?username=" + username + "&password=" + password, {
         method: "POST",
         headers: {
@@ -34,10 +39,13 @@ async function register() {
         }
     });
     let data = await response.json();
-    if (data["status"] == "ok") {
-        localStorage.setItem("username", data["username"]);
+    if (data["status"] === "ok") {
+        sessionStorage.setItem("username", data["username"]);
         registerSuccessMsg.style.opacity = 1;
-    } else registerErrorMsg.style.opacity = 1;
+    } else {
+        registerErrorMsg.textContent = "Username already exists";
+        registerErrorMsg.style.opacity = 1;
+    }
 }
 
 //# sourceMappingURL=login-page.06fec38e.js.map

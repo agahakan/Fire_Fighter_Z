@@ -40,7 +40,7 @@ function manage_mana(Cost){
         iturn += 1;
         return 1;
     }
-    if (iturn % 4 == 1)
+    if (iturn % 5 == 1)
         mana_points.textContent = 4;
     return 0;
 }
@@ -58,6 +58,7 @@ function manage_buff(activeCard) {
          turn_buff = 0;
         }
     }
+    return;
 }
 
 //gestion heal
@@ -71,6 +72,7 @@ function manage_heal(activeCard, heal) {
       if (hp_p >= 180)
         hp_player.textContent = 180;
     }
+    return;
 }
 
 // gestion defence
@@ -79,6 +81,7 @@ function manage_defence(activeCard) {
     console.log("defence du perso :", defence_p);
     if (defence_p > 0 && turndef_p == 0)
         turndef_p = 3;
+    return;
 }
 
 //gestion life left
@@ -93,17 +96,21 @@ function manage_LifeTheft(damage) {
     check_death();
     console.log("LifeTheft: dammage : %i, regen : %1", damage, regen);
     action.innerHTML = `Pompier :  uses steal life attack and inflicts ${Math.floor(damage)} damage and recover ${Math.floor(regen)} hp`
+    return;
 }
 
 // gestion of player turn
-function playerturn(activeCard) {
-    animation.animateSprite('firefighter', 1750);
+export function playerturn(activeCard) {
+    // console.log("tour avant la baisse de défense du joueur: %i", turndef_p);
+    // console.log("tour avant la baisse de défense du zombie: %i", turndef_m);
+    // console.log("tour de jeu: %i", iturn);
+    // console.log("Tour du joueur");
     let nbr = 0;
-
+    
+    animation.animateSprite('firefighter', 1750);
     console.log(activeCard);
-    if (manage_mana(activeCard.Cost) == 1) {
+    if (manage_mana(activeCard.Cost) == 1)
         return;
-    }
     manage_buff(activeCard);
 
     nbr = allgo(activeCard.Attack, defence_m, activeCard.Heal, buff, false, activeCard.CC, activeCard.Miss, activeCard.Multi);
@@ -115,12 +122,12 @@ function playerturn(activeCard) {
         console.log("Attack: ", nbr);
         action.innerHTML = `You : uses a skill and inflicts ${Math.floor(nbr)} damage`
         check_death();
-    } else if (activeCard.LifeTheft === true) {
+    } else if (activeCard.LifeTheft === true)
         manage_LifeTheft(nbr);
-    }
     turndef_m <= 0 ? defence_m = 0 : null;
     turndef_m = Math.abs(turndef_m - 1);
     iturn += 1;
+    return;
 }
 
   // gestion of all zombie attack
@@ -191,15 +198,13 @@ function monsterdefence() {
     turndef_m = 3;
     
     action.innerHTML = `Zombie :  gets stronger and increases its defense`
-
 }
 
 // gestion of zombie turn
-function monsterturn(nbr) {
+function monsterskill(nbr) {
     animation.animateSprite('zombie', 3500)
     alea = Math.floor(Math.random() * (10 - 1 + 1) + 1);
-    manage_mana(0);
-    
+
     switch (nbr) {
         //attack
         case 1:
@@ -223,22 +228,14 @@ function monsterturn(nbr) {
     iturn += 1;
 }
 
-// turn by turn gestion
-export default function turngestion(activeCard) {
-    console.log("tour avant la baisse de défense du joueur: %i", turndef_p);
-    console.log("tour avant la baisse de défense du zombie: %i", turndef_m);
-    console.log("tour de jeu: %i", iturn);
-    if (iturn %2 == 1) {
-        console.log("Tour du joueur");
-        playerturn(activeCard);
-    }
-    else if (iturn %2 == 0) {
-        console.log("Tour du zombie");
-        document.querySelector('.cards').classList.add('hidden')
-        monsterturn(Math.floor(Math.random() * (5 - 1 + 1) + 1));
-        setTimeout(() => {
-            document.querySelector('.cards').classList.remove('hidden')
-        }, 1000);
-    } else
-    console.log("error");
+// gestion of zombie turn
+export function zombieturn() {
+
+    console.log("Tour du zombie");
+    document.querySelector('.cards').classList.add('hidden')
+    monsterskill(Math.floor(Math.random() * (5 - 1 + 1) + 1));
+    setTimeout(() => {
+        document.querySelector('.cards').classList.remove('hidden')
+    }, 1000);
+    return;
 }

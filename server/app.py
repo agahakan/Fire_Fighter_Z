@@ -25,14 +25,19 @@ player_ref = db.collection('player')
 @app.route('/adduser', methods=['POST'])
 @cross_origin()
 def addUser():
-
     try:
         username = request.args.get('username')
         password = request.args.get('password')
         dict_user = {"username":username, "password":password}
         print("dict_user",dict_user)
-        db.collection(username).document("userinfo").set(dict_user)
+
+        user_ref = db.collection(username).document("userinfo")
+        user_info = user_ref.get().to_dict()
         
+        if user_info:
+            return jsonify({"status": "error", "message": "Username already exists"}), 409
+
+        user_ref.set(dict_user)
         list_cards = [doc.to_dict() for doc in db.collection(username).stream()]
         
         dic_rc = {}
