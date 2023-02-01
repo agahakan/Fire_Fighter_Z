@@ -70,8 +70,8 @@ function manage_heal(activeCard, heal) {
         hp_p = Math.floor((-hp_p - heal))*-1;
         hp_player.textContent = hp_p;
         action.innerHTML = `You : uses a skill and heals ${Math.floor(heal)} hp`
-      if (hp_p >= 180)
-        hp_player.textContent = 180;
+      if (hp_p >= 160)
+        hp_player.textContent = 160;
     }
     return;
 }
@@ -92,7 +92,7 @@ function manage_LifeTheft(damage) {
     
     regen = damage*regen;
     hp_p = Math.floor((-regen - hp_p) * -1);
-    hp_p >= 180 ? hp_player.textContent = 180 : hp_player.textContent = hp_p;
+    hp_p >= 160 ? hp_player.textContent = 160 : hp_player.textContent = hp_p;
     hp_monster.textContent -= damage;
     check_death();
     console.log("LifeTheft: dammage : %i, regen : %1", damage, regen);
@@ -158,7 +158,7 @@ function monsterattack(alea) {
         damage = allgo(17, defence_p, 0, false, 0.05, 0.02, 1);
         regen = damage*regen;
         hp_m = Math.floor((-regen - hp_m) * -1);
-        hp_m >= 100 ? hp_monster.textContent = 100 : hp_monster.textContent = hp_m;
+        hp_m >= 115 ? hp_monster.textContent = 115 : hp_monster.textContent = hp_m;
         hp_player.textContent -= damage;
         check_death();
         action.innerHTML = `Zombie :  uses steal life attack and inflicts ${Math.floor(damage)} damage and recover ${Math.floor(regen)} hp`
@@ -187,8 +187,8 @@ function monsterheal(alea) {
         hp_monster.textContent = hp_m;
         action.innerHTML = `Zombie :  uses a strong healing skill and recovers ${Math.floor(heal)} hp`
 
-        if (hp_m >= 100) {
-            hp_monster.textContent = 100;
+        if (hp_m >= 115) {
+            hp_monster.textContent = 115;
             }
         }
     }
