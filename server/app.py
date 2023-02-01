@@ -114,81 +114,59 @@ def login():
 @cross_origin()
 def init():
     """
-        init() : create cards and get 5 random cards
+    init() : create cards and get 5 random cards
+    This function initializes the game by creating the "cards" and "player" collections in the user's database, 
+    and selecting 5 random cards to add to the "player" collection.
     """
     try:
-       
+        # Get the username from the query parameters in the request
         username = request.args.get('username')
         
+        # Get the documents in the user's database as a list of dictionaries
         list_userdata = [doc.to_dict() for doc in db.collection(username).stream()]
         
-        #print("--list_userdata---------",list_userdata)
-        
-        #print("--delete cards----------------------------------------------------")
-        
+        # Delete the existing "cards" document
         doc_cardref = db.collection(username).document("cards")
-
         doc = doc_cardref.get()
         if doc.exists:
-            #print(f'Document data cards to delete: {doc.to_dict()}')
             db.collection(username).document("cards").delete()
-        #else:
-        #    print(u'No such document cards!')
 
-        
+        # Delete all subcollections of the "cards" document
         for col in doc_cardref.collections():
-            #print(f'Deleting doc card {doc.id} => {doc.get().to_dict()}')
             for doc in col.list_documents():
                 doc.delete()
 
-        #add cards
+        # Load the contents of the "cards.json" file into the "cards" collection
         with open("cards.json", "r") as f:
             file_contents = json.load(f)
-        #print("file_contents", file_contents)
-        #cards_ref.document("cards").set(file_contents)
-        #print("--add cards----------------------------------------------------")
         db.collection(username).document("cards").set({})
-        #print("--add cards----------------------------------------------------")
         for c in file_contents:
             id = c["id"]
-            #print("c",c)
             db.collection(username).document("cards").collection(str(id)).document(str(id)).set(c)
-                 
-        #print("--delete player----------------------------------------------------")
-        #print("--delete cards----------------------------------------------------")
         
+        # Delete the existing "player" document
         doc_playerref = db.collection(username).document("player")
-
         doc = doc_playerref.get()
         if doc.exists:
-            #print(f'Document data player to delete: {doc.to_dict()}')
             db.collection(username).document("player").delete()
-        #else:
-        #   print(u'No such document player!')
 
-        
+        # Delete all subcollections of the "player" document
         for col in doc_playerref.collections():
-            #print(f'Deleting doc card {doc.id} => {doc.get().to_dict()}')
             for doc in col.list_documents():
                 doc.delete()
-        
-        
+
+        # Create a new "player" document
         db.collection(username).document("player").set({})
         
-        
+        # Get a list of all the cards in the "cards" collection
         r_list = []
-        
-        list_cards=[]
+        list_cards = []
         for col in doc_cardref.collections():
-            #print(f'Deleting doc card {doc.id} => {doc.get().to_dict()}')
             for doc in col.list_documents():
                 list_cards.append(doc.get().to_dict())
         
-        #print("list_cards",list_cards)
-                
-                       
-        for i in range(1,6):
-            #print("i",i)
+        # Select 5 random cards and add them to the "player" collection
+        for i in range(1, 6):
             val = random.choice(list_cards)
             while True:
                 if val not in r_list:
@@ -200,12 +178,11 @@ def init():
                 else:
                     val = random.choice(list_cards)
         
-        #print("----------------------------------------------------")
-        #print("r_list", r_list)
-        
+        # Return the list of random cards
         return jsonify(r_list), 200
     except Exception as e:
-        return f"An Error Occurred: {e}"
+        return f
+
 
 
 # This function allows a user to draw one card randomly from the available cards.
@@ -290,18 +267,28 @@ def drawcards():
 @cross_origin()
 def get_listcards():
     try:
+        # Get the 'username' query parameter from the GET request
         username = request.args.get('username')
+        
+        # Access the document 'cards' in the Firestore collection with the same name as 'username'
         doc_cardref = db.collection(username).document("cards")
         
-        list_cards=[]
+        # Initialize an empty list to store the card dictionaries
+        list_cards = []
+        
+        # Loop through the sub-collections within the 'cards' document
         for col in doc_cardref.collections():
-            #print(f'Deleting doc card {doc.id} => {doc.get().to_dict()}')
+            # Loop through the documents in each sub-collection
             for doc in col.list_documents():
+                # Append the dictionary representation of each document to the 'list_cards' list
                 list_cards.append(doc.get().to_dict())
         
+        # Return the 'list_cards' as a JSON object with a status code of 200 OK
         return jsonify(list_cards), 200
     except Exception as e:
+        # Return an error message with the exception message if an exception occurs
         return f"An Error Occurred: {e}"
+
 
 @app.route('/listplayercards', methods=['GET'])
 @cross_origin()
@@ -318,16 +305,6 @@ def get_listplayercards():
         return jsonify(list_player), 200
     except Exception as e:
         return f"An Error Occurred: {e}"
-
-
-
-#*****************************************************************************************************
-"""
-Example:
-http://localhost:8080/playcard?id=19
-
-
-"""
 
 
 @app.route('/playcard', methods=['GET', 'PUT'])
@@ -375,8 +352,6 @@ def play_drawcard():
         id = str(my_card["id"])
         db.collection(username).document("player").collection(id).document(id).set(my_card)
         db.collection(username).document("cards").collection(id).document(id).delete()
-        
-        
         
         doc_playerref = db.collection(username).document("player")
         list_player=[]
